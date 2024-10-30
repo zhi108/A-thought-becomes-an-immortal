@@ -3,6 +3,7 @@ import pyautogui
 from pynput.keyboard import Controller
 import re
 import pyperclip
+import autoclick
 
 # 设置发送间隔时间（秒）
 interval = 5
@@ -11,8 +12,8 @@ interval = 5
 keyboard_controller = Controller()
 
 # 定义药材品阶
-grades = ["九品药材", "八品药材", "七品药材"]#, "六品药材", "五品药材", "四品药材", "三品药材", "二品药材", "一品药材"]
-
+#grades = ["九品药材", "八品药材", "七品药材", "六品药材", "五品药材", "四品药材", "三品药材", "二品药材", "一品药材"]
+grades =["三品药材", "二品药材", "一品药材"]
 # 等待几秒钟以便你有时间切换到QQ聊天窗口
 time.sleep(5)
 
@@ -23,14 +24,13 @@ def send_message_and_get_response(message):
     # 输入@一念
     keyboard_controller.type("@")
     time.sleep(1)
-    pyautogui.click(x=812, y=761)
+    autoclick.routine("./pic/yncx.png", "一念成仙")
     # 输入消息
     for char in message:
         keyboard_controller.type(char)
         time.sleep(0.05)  # 添加一个小的延迟来模拟真实的打字速度
-
+    time.sleep(1)  # 等待打字完成
     # 回车发送
-    pyautogui.press('enter')
     pyautogui.press('enter')
 
     # 等待响应返回
@@ -61,12 +61,6 @@ def extract_prices(text):
 
 
 def send_refresh_message(herb_name):
-    # 点击聊天框
-    pyautogui.click(x=542, y=805)
-    # 输入@一念
-    keyboard_controller.type("@")
-    time.sleep(0.5)
-    pyautogui.click(x=812, y=761)
     message = f"坊市刷新 {herb_name}"
     # 发送刷新消息并获取返回信息
     response = send_message_and_get_response(message)
@@ -74,16 +68,16 @@ def send_refresh_message(herb_name):
 
 
 def list_herb(herb_name, price):
-    # 将价格从万转化为具体数字
-    numeric_price = int(price * 10000 - 200000)
-    for _ in range(3):  # 每种药材上架三次
-        message = f"坊市上架 {herb_name} {numeric_price}"
-        send_message_and_get_response(message)
-        # 检查剪贴板内容是否包含"每人只可上架十五个物品！"
-        clipboard_content = pyperclip.paste()
-        if "每人只可上架十五个物品！" in clipboard_content:
-            print("已达到上架限制，停止运行。")
-            return
+    # 检查剪贴板内容是否包含"每人只可上架十五个物品！"
+    clipboard_content = pyperclip.paste()
+    if "每人只可上架十五个物品！" in clipboard_content:
+        print("已达到上架限制，停止运行。")
+        return
+    else:
+        numeric_price = int(price * 10000 - 500000)  # 将价格从万转化为具体数字，减完的值为价格
+        for _ in range(3):  # 每种药材上架三次
+                message = f"坊市上架 {herb_name} {numeric_price}"
+                send_message_and_get_response(message)
 
 
 # 主循环

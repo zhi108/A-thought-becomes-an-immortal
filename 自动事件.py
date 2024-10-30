@@ -3,12 +3,12 @@ import keyboard
 import pyautogui
 import random
 from pynput.keyboard import Controller
-
+import autoclick
 # 设置发送间隔时间（秒）
-interval = 60
+interval = 61
 
 # 设置要发送的消息列表
-messages = [" /修炼", " /修炼", " /修炼", " /修炼"," /修炼"," /修炼"," /修炼"," /直接突破"]#["双修 琉光拔"]#
+messages = [" /修炼", " /修炼", " /修炼", " /修炼"," /修炼"," /修炼"," /修炼"," /修炼"]
 
 # 创建键盘控制器
 keyboard_controller = Controller()
@@ -21,7 +21,7 @@ while True:
     message = random.choice(messages)
     keyboard_controller.type("@")
     time.sleep(0.5)
-    pyautogui.click(x=812, y=761)
+    autoclick.routine("./pic/yncx.png", "一念成仙")
     # 输入消息
     for char in message:
         keyboard_controller.type(char)
